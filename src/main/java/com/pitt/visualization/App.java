@@ -1,19 +1,24 @@
 package com.pitt.visualization;
 
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import loci.formats.FormatException;
+import loci.formats.IFormatReader;
+import loci.formats.ImageReader;
 
-//import loci.formats.IFormatReader;
-//import ij.ImageJ;
+import java.awt.image.BufferedImage;
+
 //import ij.ImagePlus;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -53,7 +58,7 @@ public class App extends Application {
         launch(args);
     }
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, FormatException {
     	
     	primaryStage.setTitle("Image Viewer");
     	FileChooser fileChooser = new FileChooser();
@@ -63,23 +68,27 @@ public class App extends Application {
     	        new ExtensionFilter("TIFF", "*.tif"));
     	File file = fileChooser.showOpenDialog(primaryStage);
     	if (file != null) {
-    		
+    		ImageView imageView = new ImageView();
     		if (file.getName().endsWith(".TIF")) {
-    		//	IFormatReader reader = new ImageReader();
+    			IFormatReader reader = new ImageReader();
     			//reader.setId("path/to/image.tif");
 
-    			//Image image = new Image(reader.openBytes(0));
+    			File tiffFile = new File("/Users/priyankasarkate/Downloads/20210823_175820_S1_C902_P99_N99_F001_Z001.TIF");
+    	        BufferedImage bufferedImage = ImageIO.read(file);
+    	        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+    	        //ImageView imageView = new ImageView(image);
     			//ImageView imageView = new ImageView();
-    			//imageView.setImage(image);
+    			imageView.setImage(image);
     		} else {
        // File file = new File("/Users/priyankasarkate/Documents/output.jpg");
     		
     		    	Image image = new Image(file.toURI().toString());
-    	            ImageView imageView = new ImageView(image);
+    	            //ImageView imageView = new ImageView(image);
+    		    	imageView.setImage(image);
         
        // imageView.setFitWidth(primaryStage.getWidth()*0.8);
         //imageView.setPreserveRatio(true);
-        
+    		}
         imageView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
                 imageView.setScaleX(imageView.getScaleX() * 1.1);
@@ -103,7 +112,7 @@ public class App extends Application {
         root.getChildren().add(imageView);
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
-    }
+    
     	}
     }
 }

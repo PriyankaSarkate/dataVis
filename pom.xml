@@ -1,15 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pitt</groupId>
+    <groupId>ome</groupId>
     <artifactId>dataVis</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    
     <url>https://docs.openmicroscopy.org/bio-formats/</url>
+    
+    <licenses>
+    <license>
+      <name>GNU General Public License v2+</name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <formats-gpl.version>6.11.1</formats-gpl.version>
+        <logback.version>1.2.9</logback.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,7 +43,21 @@
             <artifactId>javafx-media</artifactId>
             <version>14.0.2</version>
         </dependency>
-       
+       <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>formats-gpl</artifactId>
+      <version>${formats-gpl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -61,4 +86,45 @@
             </plugin>
         </plugins>
     </build>
+    
+    <!-- NB: for parent project -->
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>ome</id>
+      <name>OME Artifactory</name>
+      <url>https://artifacts.openmicroscopy.org/artifactory/maven/</url>
+    </repository>    
+    <repository>
+      <id>unidata.releases</id>
+      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases</url>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <distributionManagement>
+    <repository>
+      <id>ome.staging</id>
+      <name>OME Staging Repository</name>
+      <url>https://artifacts.openmicroscopy.org/artifactory/ome.staging</url>
+    </repository>
+    <snapshotRepository>
+      <id>ome.snapshots</id>
+      <name>OME Snapshots Repository</name>
+      <url>https://artifacts.openmicroscopy.org/artifactory/ome.snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
