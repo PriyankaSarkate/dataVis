@@ -43,6 +43,14 @@
             <artifactId>javafx-media</artifactId>
             <version>14.0.2</version>
         </dependency>
+       <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-swing</artifactId>
+    <version>11-ea+24</version>
+</dependency>
+
+
        <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>formats-gpl</artifactId>
@@ -89,6 +97,11 @@
     
     <!-- NB: for parent project -->
   <repositories>
+	 <repository>
+        <id>bintray-javafx</id>
+        <name>bintray</name>
+        <url>https://dl.bintray.com/openjfx/javafx-maven-repos/</url>
+    </repository>
     <repository>
       <id>central</id>
       <name>Central Repository</name>
