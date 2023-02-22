@@ -15,12 +15,23 @@
     </license>
   </licenses>
   
+  
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <formats-gpl.version>6.11.1</formats-gpl.version>
-        <logback.version>1.2.9</logback.version>
+        <formats-gpl.version>6.12.0</formats-gpl.version>
+    <logback.version>1.2.11</logback.version>
+
+    <!-- NB: Avoid platform encoding warning when copying resources. -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- NB: Specify formatting of the maven.build.timestamp property. -->
+    <maven.build.timestamp.format>d MMMMM yyyy</maven.build.timestamp.format>
+
+    <!-- NB: Override argLine property for extra maven-surefire-plugin args. -->
+    <argLine/>
     </properties>
     <dependencies>
         <dependency>
@@ -44,11 +55,11 @@
             <version>14.0.2</version>
         </dependency>
        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
-<dependency>
-    <groupId>org.openjfx</groupId>
-    <artifactId>javafx-swing</artifactId>
-    <version>11-ea+24</version>
-</dependency>
+        <dependency>
+    		<groupId>org.openjfx</groupId>
+    		<artifactId>javafx-swing</artifactId>
+    		<version>11-ea+24</version>
+		</dependency>
 
 
        <dependency>
@@ -66,6 +77,8 @@
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
     </dependency>
+   
+
     </dependencies>
     <build>
         <plugins>
@@ -95,13 +108,13 @@
         </plugins>
     </build>
     
+    <prerequisites>
+    <maven>3.0.5</maven>
+  </prerequisites>
+
     <!-- NB: for parent project -->
   <repositories>
-	 <repository>
-        <id>bintray-javafx</id>
-        <name>bintray</name>
-        <url>https://dl.bintray.com/openjfx/javafx-maven-repos/</url>
-    </repository>
+
     <repository>
       <id>central</id>
       <name>Central Repository</name>
