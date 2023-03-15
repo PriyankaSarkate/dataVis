@@ -9,8 +9,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import loci.formats.FormatException;
-import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.MetadataTools;
+import ome.xml.meta.MetadataRetrieve;
 
 import java.awt.image.BufferedImage;
 
@@ -22,6 +23,8 @@ import javax.imageio.ImageIO;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
@@ -64,21 +67,46 @@ public class App extends Application {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle("Open Image File");
     	fileChooser.getExtensionFilters().addAll(
-    	        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.tif"),
+    	        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.tif", "*"),
     	        new ExtensionFilter("TIFF", "*.tif"));
     	File file = fileChooser.showOpenDialog(primaryStage);
     	if (file != null) {
     		ImageView imageView = new ImageView();
-    		if (file.getName().endsWith(".TIF")) {
-    			IFormatReader reader = new ImageReader();
-    			//reader.setId("path/to/image.tif");
+    		if (file.getName().endsWith(".TIF") || file.getName().endsWith(".tif")) {
+    			// Create a new Bio-Formats reader
+    			ImageReader reader = new ImageReader();
+    			reader.setId(file.getAbsolutePath());
 
-    			File tiffFile = new File("/Users/priyankasarkate/Downloads/20210823_175820_S1_C902_P99_N99_F001_Z001.TIF");
-    	        BufferedImage bufferedImage = ImageIO.read(file);
-    	        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-    	        //ImageView imageView = new ImageView(image);
-    			//ImageView imageView = new ImageView();
-    			imageView.setImage(image);
+    			// Specify the input file
+    			//File file = new File("path/to/pyramidal/image");
+    			MetadataRetrieve meta = MetadataTools.createOMEXMLMetadata();
+    			BufferedImage image = new BufferedImage(reader.getSizeX(), reader.getSizeY(), BufferedImage.TYPE_BYTE_GRAY);
+
+    			
+    			// Loop over each image level and channel
+    			for (int level = 0; level < reader.getResolutionCount(); level++) {
+    			    for (int channel = 0; channel < reader.getSizeC(); channel++) {
+    			        // Get the image data for the current level and channel
+    			        byte[] bytes = new byte[reader.getSizeX() * reader.getSizeY()];
+
+    			        reader.openBytes(channel, bytes);
+
+    			        // Convert the image data to an array of integers
+    			        int[] pixels = new int[bytes.length];
+    			        for (int i = 0; i < pixels.length; i++) {
+    			            pixels[i] = bytes[i] & 0xff;
+    			        }
+
+    			        // Set the image data for the current level and channel
+    			        image.setRGB(0, 0, reader.getSizeX(), reader.getSizeY(), pixels, 0, reader.getSizeX());
+    			    }
+    			}
+
+    			// Create a JavaFX Image from the BufferedImage
+    			Image fxImage = SwingFXUtils.toFXImage(image, null);
+
+    			// Display the image in a JavaFX ImageView
+    			 imageView = new ImageView(fxImage);
     		} else {
        // File file = new File("/Users/priyankasarkate/Documents/output.jpg");
     		
@@ -89,27 +117,28 @@ public class App extends Application {
        // imageView.setFitWidth(primaryStage.getWidth()*0.8);
         //imageView.setPreserveRatio(true);
     		}
-        imageView.setOnMouseClicked(event -> {
+    		final ImageView finalImageView = imageView;
+    		finalImageView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                imageView.setScaleX(imageView.getScaleX() * 1.1);
-                imageView.setScaleY(imageView.getScaleY() * 1.1);
+            	finalImageView.setScaleX(finalImageView.getScaleX() * 1.1);
+            	finalImageView.setScaleY(finalImageView.getScaleY() * 1.1);
             } else if (event.getButton() == MouseButton.SECONDARY) {
-                imageView.setScaleX(imageView.getScaleX() / 1.1);
-                imageView.setScaleY(imageView.getScaleY() / 1.1);
+            	finalImageView.setScaleX(finalImageView.getScaleX() / 1.1);
+            	finalImageView.setScaleY(finalImageView.getScaleY() / 1.1);
             }
         });
-        imageView.setOnScroll(event -> {
+    		finalImageView.setOnScroll(event -> {
             if (event.getDeltaY() > 0) {
-                imageView.setScaleX(imageView.getScaleX() * 1.1);
-                imageView.setScaleY(imageView.getScaleY() * 1.1);
+            	finalImageView.setScaleX(finalImageView.getScaleX() * 1.1);
+            	finalImageView.setScaleY(finalImageView.getScaleY() * 1.1);
             } else {
-                imageView.setScaleX(imageView.getScaleX() / 1.1);
-                imageView.setScaleY(imageView.getScaleY() / 1.1);
+            	finalImageView.setScaleX(finalImageView.getScaleX() / 1.1);
+            	finalImageView.setScaleY(finalImageView.getScaleY() / 1.1);
             }
         });
         StackPane root = new StackPane();
        // StackPane.setAlignment(imageView, Pos.TOP_CENTER);
-        root.getChildren().add(imageView);
+        root.getChildren().add(finalImageView);
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     

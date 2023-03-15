@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <formats-gpl.version>6.12.0</formats-gpl.version>
+        <formats-gpl.version>6.5.1</formats-gpl.version>
     <logback.version>1.2.11</logback.version>
 
     <!-- NB: Avoid platform encoding warning when copying resources. -->
@@ -34,6 +34,21 @@
     <argLine/>
     </properties>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/ome/loci_tools -->
+<dependency>
+    <groupId>ome</groupId>
+    <artifactId>loci_tools</artifactId>
+    <version>6.8.0</version>
+    <type>pom</type>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/ome/formats-bsd -->
+<dependency>
+    <groupId>ome</groupId>
+    <artifactId>formats-bsd</artifactId>
+    <version>6.5.0</version>
+</dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -120,6 +135,7 @@
       <name>Central Repository</name>
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
+   
     <repository>
       <id>ome</id>
       <name>OME Artifactory</name>
@@ -130,6 +146,10 @@
       <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases</url>
       <snapshots><enabled>false</enabled></snapshots>
     </repository>
+     <repository>
+    <id>openmicroscopy</id>
+    <url>https://repository.openmicroscopy.org/artifactory/repo/</url>
+  </repository>
   </repositories>
 
   <pluginRepositories>
